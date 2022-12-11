@@ -3,10 +3,16 @@ package model;
 public abstract class Position {
     private int x;
     private int y;
+    private char shape;
 
-    public Position(int x, int y){
+    public Position(int x, int y, char shape){
         this.x = x;
         this.y = y;
+        this.shape = shape;
+    }
+
+    public char getShape() {
+        return shape;
     }
 
     public int getX() {

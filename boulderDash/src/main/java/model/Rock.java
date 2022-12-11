@@ -5,6 +5,6 @@ public class Rock extends Position{
     private int y;
 
     public Rock(int x, int y) {
-        super(x, y);
+        super(x, y, 'r');
     }
 }

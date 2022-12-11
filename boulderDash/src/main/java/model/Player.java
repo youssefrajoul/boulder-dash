@@ -5,6 +5,6 @@ public class Player extends Position{
     private int y;
 
     public Player(int x, int y) {
-        super(x, y);
+        super(x, y, 'p');
     }
 }

@@ -5,6 +5,6 @@ public class Wall extends Position{
     private int y;
 
     public Wall(int x, int y) {
-        super(x, y);
+        super(x, y, 'w');
     }
 }

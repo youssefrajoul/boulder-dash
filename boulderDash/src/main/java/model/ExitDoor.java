@@ -5,6 +5,6 @@ public class ExitDoor extends Position{
     private int y;
 
     public ExitDoor(int x, int y) {
-        super(x, y);
+        super(x, y, 'x');
     }
 }

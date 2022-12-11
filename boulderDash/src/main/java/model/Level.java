@@ -1,14 +1,29 @@
 package model;
 
 import java.io.*;
-import java.util.*;
 
 
 public class Level {
+    private int levelNumber;
+    private FilePath filePath;
+    private InputStream levelMap;
 
+    public Level(int levelNumber, FilePath filePath){
+        this.levelNumber = levelNumber;
+        this.filePath = filePath;
+        this.levelMap = Level.class.getResourceAsStream(filePath.getLevel());
+    }
+
+    public int getLevelNumber() {
+        return levelNumber;
+    }
+
+    public InputStream getLevelMap() {
+        return levelMap;
+    }
 
     public static void main(String[] args) {
-        LevelFile lev = LevelFile.LEVEL1;
+        FilePath lev = FilePath.LEVEL1;
         char[][] squares = new char[20][39];
         try (var in = Level.class.getResourceAsStream(lev.getLevel())) {
             int i;
@@ -30,11 +45,5 @@ public class Level {
         } catch (IOException e) {
             System.out.println("error resources file level.txt");
         }
-//        for (int k = 0; k < squares.length; k++) {
-//            for (int l = 0; l < squares[k].length; l++) {
-//                System.out.print(squares[k][l]);
-//            }
-//            System.out.println("");
-//        }
     }
 }
