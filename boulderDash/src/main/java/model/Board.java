@@ -1,18 +1,17 @@
 package model;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.Year;
-import java.util.HashMap;
-import java.util.Map;
-
 public class Board {
-    private Position[][] squares;
+    private Square[][] squares;
     private Level level;
+    private Rockford rockford;
 
     public Board(Level level) {
-        this.squares = new Position[20][39];
+        this.squares = new Square[20][39];
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 39; j++) {
+                squares[i][j] = new Square(null);
+            }
+        }
         this.level = level;
         int fileData;
         int i = 0;//i
@@ -29,25 +28,26 @@ public class Board {
                 } else {
                     switch (fileData) {
                         case 112:
-                            squares[i][j] = new Player(i, j);
+                            rockford = new Rockford(Shape.p, new Position(i, j));
+                            squares[i][j].setItem(rockford);
                             break;
                         case 99:
-                            squares[i][j] = new Clay(i, j);
+                            squares[i][j].setItem(new Clay(Shape.c, new Position(i, j)));
                             break;
                         case 100:
-                            squares[i][j] = new Diamonds(i, j);
+                            squares[i][j].setItem(new Diamonds(Shape.d, new Position(i, j)));
                             break;
                         case 101:
-                            squares[i][j] = new Empty(i, j);
+                            squares[i][j].setItem(new Empty(Shape.e, new Position(i, j)));
                             break;
                         case 114:
-                            squares[i][j] = new Rock(i, j);
+                            squares[i][j].setItem(new Rock(Shape.r, new Position(i, j)));
                             break;
                         case 119:
-                            squares[i][j] = new Wall(i, j);
+                            squares[i][j].setItem(new Wall(Shape.w, new Position(i, j)));
                             break;
                         case 120:
-                            squares[i][j] = new ExitDoor(i, j);
+                            squares[i][j].setItem(new ExitDoor(Shape.x, new Position(i, j)));
                             break;
                     }
                     j++;
@@ -58,11 +58,11 @@ public class Board {
         }
     }
 
-    public Position[][] getSquares() {
+    public Square[][] getSquares() {
         return squares;
     }
 
-    public char getSquaresAt(int x, int y) {
-        return squares[x][y].getShape();
+    public Shape getSquaresAt(int x, int y) {
+        return squares[x][y].getItem().getShape();
     }
 }

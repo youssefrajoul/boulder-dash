@@ -1,10 +1,8 @@
 package model;
 
-public class Empty extends Position {
-    private int x;
-    private int y;
+public class Empty extends Item {
 
-    public Empty(int x, int y) {
-        super(x, y, 'e');
+    public Empty(Shape shape, Position position) {
+        super(shape, position);
     }
 }

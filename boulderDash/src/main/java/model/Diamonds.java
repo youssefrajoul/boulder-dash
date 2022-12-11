@@ -1,11 +1,14 @@
 package model;
 
-public class Diamonds extends Position{
-    private int x;
-    private int y;
-    private char shape;
+public class Diamonds extends Item{
+    private static int numberOfDiamonds;
 
-    public Diamonds(int x, int y) {
-        super(x, y, 'd');
+    public Diamonds(Shape shape, Position position) {
+        super(shape, position);
+        numberOfDiamonds ++;
+    }
+
+    public static int diamondsCounter(){
+        return numberOfDiamonds;
     }
 }

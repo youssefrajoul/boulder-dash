@@ -1,10 +1,8 @@
 package model;
 
-public class Wall extends Position{
-    private int x;
-    private int y;
+public class Wall extends Item{
 
-    public Wall(int x, int y) {
-        super(x, y, 'w');
+    public Wall(Shape shape, Position position) {
+        super(shape, position);
     }
 }

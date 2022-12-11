@@ -1,12 +1,9 @@
 package model;
 
-public class Clay extends Position {
-    private int x;
-    private int y;
-    private char shape;
+public class Clay extends Item {
 
-    public Clay(int x, int y) {
-        super(x, y, 'c');
+    public Clay(Shape shape, Position position) {
+        super(shape, position);
     }
 
 }

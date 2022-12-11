@@ -1,10 +1,8 @@
 package model;
 
-public class ExitDoor extends Position{
-    private int x;
-    private int y;
+public class ExitDoor extends Item{
 
-    public ExitDoor(int x, int y) {
-        super(x, y, 'x');
+    public ExitDoor(Shape shape, Position position) {
+        super(shape, position);
     }
 }

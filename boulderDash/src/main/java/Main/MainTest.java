@@ -1,6 +1,7 @@
 package Main;
 
 import model.Board;
+import model.Diamonds;
 import model.FilePath;
 import model.Level;
 
@@ -15,6 +16,5 @@ public class MainTest {
             }
             System.out.println("");
         }
-
     }
 }

@@ -1,10 +1,8 @@
 package model;
 
-public class Rock extends Position{
-    private int x;
-    private int y;
+public class Rock extends Item{
 
-    public Rock(int x, int y) {
-        super(x, y, 'r');
+    public Rock(Shape shape, Position position) {
+        super(shape, position);
     }
 }
