@@ -23,8 +23,6 @@ public class Board {
                     j = 0;
                     i++;
                     continue;
-//                } else if (fileData == 13) {
-//                    continue;
                 } else {
                     switch (fileData) {
                         case 112:
@@ -60,6 +58,15 @@ public class Board {
 
     public Square[][] getSquares() {
         return squares;
+    }
+
+    public void move(int x, int y){
+        Position currentPos = rockford.getPosition();
+        Position nextPos = new Position(x, y);
+        Empty e = new Empty(Shape.e, currentPos);
+        squares[currentPos.getX()][currentPos.getY()].setItem(e);
+        rockford.setPosition(nextPos);
+        squares[x][y].setItem(rockford);
     }
 
     public Shape getSquaresAt(int x, int y) {
