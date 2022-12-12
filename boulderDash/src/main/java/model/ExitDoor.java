@@ -1,8 +1,15 @@
 package model;
 
 public class ExitDoor extends Item{
+    private Shape shape;
 
-    public ExitDoor(Shape shape, Position position) {
-        super(shape, position);
+    public ExitDoor(Position position) {
+        super(position);
+        this.shape = Shape.x;
+    }
+
+    @Override
+    public Shape getShape() {
+        return shape;
     }
 }

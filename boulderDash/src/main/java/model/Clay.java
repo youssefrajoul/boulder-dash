@@ -2,8 +2,16 @@ package model;
 
 public class Clay extends Item {
 
-    public Clay(Shape shape, Position position) {
-        super(shape, position);
+    private Shape shape;
+
+    public Clay(Position position) {
+        super(position);
+        this.shape = Shape.c;
+    }
+
+    @Override
+    public Shape getShape() {
+        return shape;
     }
 
 }

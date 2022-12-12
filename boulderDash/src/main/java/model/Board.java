@@ -13,39 +13,42 @@ public class Board {
             }
         }
         this.level = level;
+    }
+
+    public void constructSquares() {
         int fileData;
         int i = 0;//i
         int j = 0;//j
         try {
             while ((fileData = this.level.getLevelMap().read()) != -1) {
-                // 10 and 13 (in ascii-code) are equivalent to \n
+                // 10 and 13 (in ascii-code) are equivalent to \n (new Line)
                 if (fileData == 10) {
                     j = 0;
                     i++;
                     continue;
                 } else {
                     switch (fileData) {
-                        case 112:
-                            rockford = new Rockford(Shape.p, new Position(i, j));
+                        case 102:
+                            rockford = new Rockford(new Position(i, j));
                             squares[i][j].setItem(rockford);
                             break;
                         case 99:
-                            squares[i][j].setItem(new Clay(Shape.c, new Position(i, j)));
+                            squares[i][j].setItem(new Clay(new Position(i, j)));
                             break;
                         case 100:
-                            squares[i][j].setItem(new Diamonds(Shape.d, new Position(i, j)));
+                            squares[i][j].setItem(new Diamonds(new Position(i, j)));
                             break;
                         case 101:
-                            squares[i][j].setItem(new Empty(Shape.e, new Position(i, j)));
+                            squares[i][j].setItem(new Empty(new Position(i, j)));
                             break;
                         case 114:
-                            squares[i][j].setItem(new Rock(Shape.r, new Position(i, j)));
+                            squares[i][j].setItem(new Rock(new Position(i, j)));
                             break;
                         case 119:
-                            squares[i][j].setItem(new Wall(Shape.w, new Position(i, j)));
+                            squares[i][j].setItem(new Wall(new Position(i, j)));
                             break;
                         case 120:
-                            squares[i][j].setItem(new ExitDoor(Shape.x, new Position(i, j)));
+                            squares[i][j].setItem(new ExitDoor(new Position(i, j)));
                             break;
                     }
                     j++;
@@ -60,13 +63,32 @@ public class Board {
         return squares;
     }
 
-    public void move(int x, int y){
+
+    public void move(String direction) {
         Position currentPos = rockford.getPosition();
-        Position nextPos = new Position(x, y);
-        Empty e = new Empty(Shape.e, currentPos);
+        Position nextPos;
+        switch (direction) {
+            //QWERTY US Keyboard
+            case "w":
+                nextPos = new Position(currentPos.getX() - 1, currentPos.getY());
+                break;
+            case "a":
+                nextPos = new Position(currentPos.getX(), currentPos.getY() - 1);
+                break;
+            case "s":
+                nextPos = new Position(currentPos.getX() + 1, currentPos.getY());
+                break;
+            case "d":
+                nextPos = new Position(currentPos.getX(), currentPos.getY() + 1);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + direction);
+        }
+
+        Empty e = new Empty(currentPos);
         squares[currentPos.getX()][currentPos.getY()].setItem(e);
         rockford.setPosition(nextPos);
-        squares[x][y].setItem(rockford);
+        squares[nextPos.getX()][nextPos.getY()].setItem(rockford);
     }
 
     public Shape getSquaresAt(int x, int y) {

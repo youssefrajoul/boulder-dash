@@ -1,11 +1,10 @@
 package model;
 
 public class Item {
-    private Shape shape;
     private Position position;
+    private Shape shape;
 
-    public Item(Shape shape, Position position){
-        this.shape = shape;
+    public Item(Position position){
         this.position = position;
     }
 

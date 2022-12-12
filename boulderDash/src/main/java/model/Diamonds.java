@@ -1,11 +1,18 @@
 package model;
 
 public class Diamonds extends Item{
+    private Shape shape;
     private static int numberOfDiamonds;
 
-    public Diamonds(Shape shape, Position position) {
-        super(shape, position);
+    public Diamonds(Position position) {
+        super(position);
+        this.shape = Shape.d;
         numberOfDiamonds ++;
+    }
+
+    @Override
+    public Shape getShape() {
+        return shape;
     }
 
     public static int diamondsCounter(){

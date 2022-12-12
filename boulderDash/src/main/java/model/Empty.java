@@ -1,8 +1,15 @@
 package model;
 
 public class Empty extends Item {
+    private Shape shape;
 
-    public Empty(Shape shape, Position position) {
-        super(shape, position);
+    public Empty(Position position) {
+        super(position);
+        this.shape = Shape.e;
+    }
+
+    @Override
+    public Shape getShape() {
+        return shape;
     }
 }
