@@ -4,7 +4,7 @@ public class Item {
     private Position position;
     private Shape shape;
 
-    public Item(Position position){
+    public Item(Position position) {
         this.position = position;
     }
 
@@ -17,6 +17,6 @@ public class Item {
     }
 
     public void setPosition(Position position) {
-        this.position = position;
+        this.position.move(position);
     }
 }

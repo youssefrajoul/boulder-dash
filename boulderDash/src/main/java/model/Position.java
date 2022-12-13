@@ -4,7 +4,7 @@ public class Position {
     private int x;
     private int y;
 
-    public Position(int x, int y){
+    public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -25,12 +25,9 @@ public class Position {
         this.y = y;
     }
 
-    public void move(int x, int y){
-        this.x += x;
-        this.y += y;
+    public void move(Position position) {
+        this.x = position.getX();
+        this.y = position.getY();
     }
 
-//    public void getPosition(){
-//        System.out.println("("+getX()+", "+getY()+")");
-//    }
 }
