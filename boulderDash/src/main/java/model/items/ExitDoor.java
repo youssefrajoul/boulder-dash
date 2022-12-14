@@ -1,6 +1,8 @@
-package model;
+package model.items;
 
-public class ExitDoor extends Item{
+import model.Position;
+
+public class ExitDoor extends Item {
     private Shape shape;
 
     public ExitDoor(Position position) {

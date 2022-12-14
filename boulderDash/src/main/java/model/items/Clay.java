@@ -1,4 +1,6 @@
-package model;
+package model.items;
+
+import model.Position;
 
 public class Clay extends Item {
 

@@ -1,6 +1,10 @@
-package model;
+package model.items;
 
-public class Wall extends Item{
+import model.Position;
+import model.items.Item;
+import model.items.Shape;
+
+public class Wall extends Item {
 
     private Shape shape;
 

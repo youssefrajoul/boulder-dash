@@ -1,8 +1,6 @@
-package Controller;
+package controller;
 
-import model.Board;
 import model.Game;
-import model.Level;
 import view.TextView;
 
 import java.io.BufferedReader;
@@ -27,17 +25,27 @@ public class Controller {
         int quit = 0;
         System.out.println("-----Welcome to Boulder-Dash 1984-----");
 
+        game.saveItems();
         while (!game.isGameOver()) {
             view.display();
+
             direction = playerInputs();
-            game.move(direction);
+            if (direction.equals("u") && !game.isUndoStackEmpty()){
+                game.undoCmd();
+            } else if (direction.equals("r") && !game.isRedoStackEmpty()) {
+                game.redoCmd();
+            } else if (direction.equals("w") || direction.equals("a") || direction.equals("s") || direction.equals("d")){
+                game.moveRockford(direction);
+                game.saveItems();
+            }
         }
         view.display();
         System.out.println("Game Over");
     }
 
     private String playerInputs() {
-        var pattern = Pattern.compile("[wasd]");
+        // w: up / a: left / s: left / d: right/ u: undo / r: redo
+        var pattern = Pattern.compile("[wasdur]");
         String input = "";
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
