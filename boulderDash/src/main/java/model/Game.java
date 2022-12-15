@@ -13,19 +13,22 @@ public class Game {
     ArrayList<Diamonds> diamondsList;
     private int score;
     private boolean gameOver;
-    private ArrayList<Board> undoStack;
-    private ArrayList<Board> redoStack;
+    private Stack<Board> undoBoard;
+    private Stack<Board> redoBoard;
+    private Stack<Position> undoRockford;
+    private Stack<Position> redoRockford;
 
     public Game() {
-        //level = new Level(1, FilePath.LEVEL1);
         this.board = new Board();
         rockList = new ArrayList<>();
         diamondsList = new ArrayList<>();
         this.score = 0;
         this.level = new Level(1, FilePath.LEVEL1);
         this.gameOver = false;
-        this.undoStack = new ArrayList<>();
-        this.redoStack = new ArrayList<>();
+        this.undoBoard = new Stack<>();
+        this.redoBoard = new Stack<>();
+        this.undoRockford = new Stack<>();
+        this.redoRockford = new Stack<>();
     }
 
     public void saveItems() {
@@ -33,61 +36,45 @@ public class Game {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 39; j++) {
                 Position tempPos = new Position(i, j);
-                if (board.getItem(tempPos) instanceof Clay) currentBoard.setItem(new Clay(tempPos), tempPos);
-                if (board.getItem(tempPos) instanceof Diamonds) currentBoard.setItem(new Diamonds(tempPos), tempPos);
-                if (board.getItem(tempPos) instanceof Empty) currentBoard.setItem(new Empty(tempPos), tempPos);
-                if (board.getItem(tempPos) instanceof ExitDoor) currentBoard.setItem(new ExitDoor(tempPos), tempPos);
-                if (board.getItem(tempPos) instanceof Rock) currentBoard.setItem(new Rock(tempPos), tempPos);
-                if (board.getItem(tempPos) instanceof Rockford) currentBoard.setItem(new Rockford(tempPos), tempPos);
-                if (board.getItem(tempPos) instanceof Wall) currentBoard.setItem(new Wall(tempPos), tempPos);
+                if (this.board.isClay(tempPos)) currentBoard.setItem(new Clay(tempPos), tempPos);
+                if (this.board.isDiamond(tempPos)) currentBoard.setItem(new Diamonds(tempPos), tempPos);
+                if (this.board.isEmpty(tempPos)) currentBoard.setItem(new Empty(tempPos), tempPos);
+                if (this.board.isExitdoor(tempPos)) currentBoard.setItem(new ExitDoor(tempPos), tempPos);
+                if (this.board.isRock(tempPos)) currentBoard.setItem(new Rock(tempPos), tempPos);
+                if (this.board.isRockford(tempPos)) currentBoard.setItem(new Rockford(tempPos), tempPos);
+                if (this.board.isWall(tempPos)) currentBoard.setItem(new Wall(tempPos), tempPos);
             }
         }
-        //this.undoStack.push(currentBoard);
-        this.undoStack.add(currentBoard);
-        System.out.println(undoStack.size());
-//        for (int i = 0; i < undoStack.size(); i++) {
-//            System.out.println(undoStack.peek());
-//        }
+        this.undoBoard.push(currentBoard);
+        this.undoRockford.push(new Position(this.rockford.getPosition().getX(), this.rockford.getPosition().getY()));
     }
 
-    public boolean isUndoStackEmpty(){
-        return this.undoStack.isEmpty();
+    public boolean isUndoStackEmpty() {
+        return this.undoBoard.isEmpty();
     }
 
-    public boolean isRedoStackEmpty(){
-        return this.redoStack.isEmpty();
+    public boolean isRedoStackEmpty() {
+        return this.redoBoard.isEmpty();
     }
 
     public void undoCmd() {
-//        // Condition to prevent undoing (or display) the current board twice.
-//        if (this.board.equals(undoStack.peek())) {
-//            redoStack.push(undoStack.pop());
-//            //System.out.println("teset1");
-//        }
-//        //System.out.println("teset2");
-//        if (isRedoStackEmpty()) redoStack.push(undoStack.pop());
-
-        //Board tempBoard = this.undoStack.pop();
-        Board tempBoard = this.undoStack.get(undoStack.size() - 1);
-        undoStack.remove(undoStack.size()-1);
-        this.redoStack.add(tempBoard);
-        this.board = tempBoard;
-        //System.out.println(undoStack.size());
+        if (!undoRockford.isEmpty() && !undoBoard.isEmpty()) {
+            redoBoard.push(getBoard());
+            redoRockford.push(getRockford().getPosition());
+            this.board = this.undoBoard.pop();
+            this.rockford.setPosition(undoRockford.pop());
+        }
     }
 
-    public void redoCmd(){
-//        // Condition to prevent redoing (or display) the current board twice.
-//        if (this.board.equals(redoStack.peek())) {
-//            undoStack.push(redoStack.pop());
-//            //System.out.println("test3");
-//        }
-//        //if (isUndoStackEmpty()) undoStack.push(redoStack.pop());
-        Board tempBoard = this.redoStack.get(redoStack.size() - 1);
-        redoStack.remove(redoStack.size()-1);
-        this.undoStack.add(tempBoard);
-        this.board = tempBoard;
-        System.out.println(redoStack.size());
+    public void redoCmd() {
+        if (!redoRockford.isEmpty() && !redoBoard.isEmpty()){
+            undoBoard.push(getBoard());
+            undoRockford.push(getRockford().getPosition());
+            this.board = this.redoBoard.pop();
+            this.rockford.setPosition(redoRockford.pop());
+        }
     }
+
 
     public void start() {
         int fileData;
@@ -136,7 +123,7 @@ public class Game {
     }
 
     public void moveRockford(String direction) {
-        //saveItems();
+        saveItems();
         Position currentPos = rockford.getPosition();
         Position nextPos;
         switch (direction) {
@@ -294,6 +281,10 @@ public class Game {
     }
 
     public Rockford getRockford() {
-        return rockford;
+        return this.rockford;
+    }
+
+    public void setRockford(Rockford rockford) {
+        this.rockford = rockford;
     }
 }

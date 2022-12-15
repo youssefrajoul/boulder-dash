@@ -9,7 +9,6 @@ import java.util.Objects;
 
 public class Board {
     private Square[][] squares;
-    private Level level;
 
     public Board() {
         this.squares = new Square[20][39];
@@ -18,7 +17,6 @@ public class Board {
                 squares[i][j] = new Square(null);
             }
         }
-
     }
 
     public void setItem(Item item, Position position){
@@ -34,6 +32,10 @@ public class Board {
     }
     public boolean isEmpty(Position position){
         return squares[position.getX()][position.getY()].getItem().getShape() == Shape.e;
+    }
+
+    public boolean isExitdoor(Position position){
+        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.x;
     }
 
     public boolean isRock(Position position){
@@ -52,18 +54,20 @@ public class Board {
         return squares[position.getX()][position.getY()].getItem().getShape() == Shape.w;
     }
 
+    public boolean isClay(Position position){
+        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.c;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Board board = (Board) o;
-        return Arrays.equals(squares, board.squares) && Objects.equals(level, board.level);
+        return Arrays.equals(squares, board.squares);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(level);
-        result = 31 * result + Arrays.hashCode(squares);
-        return result;
+        return Arrays.hashCode(squares);
     }
 }

@@ -18,5 +18,6 @@ public class TextView {
             }
             System.out.println("");
         }
+        System.out.println(game.getRockford().printPosition());
     }
 }

@@ -3,6 +3,9 @@ package com.example.boulderdash;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -11,7 +14,11 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Image diamond = new Image("Diamond.png");
+        ImageView iv = new ImageView(diamond);
+        GridPane grid = new GridPane();
+        grid.add(iv, 3 , 3);
+        Scene scene = new Scene(grid, 320, 240);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();

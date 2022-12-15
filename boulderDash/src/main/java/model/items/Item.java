@@ -36,4 +36,8 @@ public class Item {
     public int hashCode() {
         return Objects.hash(position, shape);
     }
+
+    public String printPosition(){
+        return position.toString();
+    }
 }

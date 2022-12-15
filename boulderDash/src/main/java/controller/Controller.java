@@ -21,11 +21,9 @@ public class Controller {
         game.start();
         String direction = "";
 
-        Scanner scan = new Scanner(System.in);
-        int quit = 0;
         System.out.println("-----Welcome to Boulder-Dash 1984-----");
 
-        game.saveItems();
+        //game.saveItems();
         while (!game.isGameOver()) {
             view.display();
 
@@ -36,7 +34,7 @@ public class Controller {
                 game.redoCmd();
             } else if (direction.equals("w") || direction.equals("a") || direction.equals("s") || direction.equals("d")){
                 game.moveRockford(direction);
-                game.saveItems();
+                //game.saveItems();
             }
         }
         view.display();

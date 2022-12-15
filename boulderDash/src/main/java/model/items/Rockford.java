@@ -15,4 +15,9 @@ public class Rockford extends Item {
     public Shape getShape() {
         return shape;
     }
+
+    @Override
+    public String printPosition() {
+        return super.printPosition();
+    }
 }
