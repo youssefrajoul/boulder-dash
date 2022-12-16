@@ -6,7 +6,7 @@ public interface Command {
      * Executes the command.
      *
      */
-    public void execute();
+    public void execute(String direction);
 
     /**
      * Undoes the command.

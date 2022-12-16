@@ -5,7 +5,6 @@ import model.items.Shape;
 import model.items.Square;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Board {
     private Square[][] squares;

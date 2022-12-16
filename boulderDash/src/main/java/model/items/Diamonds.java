@@ -24,4 +24,6 @@ public class Diamonds extends Item {
     public void setClaimed() {
         this.claimed = true;
     }
+
+
 }

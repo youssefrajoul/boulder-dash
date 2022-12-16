@@ -1,13 +1,22 @@
 package view;
 
+import Observer.*;
 import model.Game;
 import model.Position;
 
-public class TextView {
+public class TextView implements Observer {
     private Game game;
 
     public TextView(Game game){
         this.game = game;
+        this.game.attach(this);
+    }
+
+    @Override
+    public void update(Subject changedSubject) {
+        if (changedSubject == game){
+            display();
+        }
     }
 
     public void display(){

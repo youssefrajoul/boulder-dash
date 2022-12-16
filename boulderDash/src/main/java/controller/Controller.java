@@ -1,5 +1,7 @@
 package controller;
 
+import command.Command;
+import command.PlayCommand;
 import model.Game;
 import view.TextView;
 
@@ -20,21 +22,19 @@ public class Controller {
     public void play(){
         game.start();
         String direction = "";
+        PlayCommand play = new PlayCommand(game);
 
         System.out.println("-----Welcome to Boulder-Dash 1984-----");
 
-        //game.saveItems();
         while (!game.isGameOver()) {
             view.display();
-
             direction = playerInputs();
             if (direction.equals("u") && !game.isUndoStackEmpty()){
-                game.undoCmd();
+                play.undo();
             } else if (direction.equals("r") && !game.isRedoStackEmpty()) {
-                game.redoCmd();
+                play.redo();
             } else if (direction.equals("w") || direction.equals("a") || direction.equals("s") || direction.equals("d")){
-                game.moveRockford(direction);
-                //game.saveItems();
+                play.execute(direction);
             }
         }
         view.display();

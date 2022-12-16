@@ -1,16 +1,14 @@
 package model;
 
+import Observer.Subject;
 import model.items.*;
-
-import java.util.ArrayList;
 import java.util.Stack;
 
-public class Game {
+public class Game extends Subject {
     private Level level;
     private Board board;
     private Rockford rockford;
-    ArrayList<Rock> rockList;
-    ArrayList<Diamonds> diamondsList;
+    private int numberOfDiamonds;
     private int score;
     private boolean gameOver;
     private Stack<Board> undoBoard;
@@ -20,8 +18,6 @@ public class Game {
 
     public Game() {
         this.board = new Board();
-        rockList = new ArrayList<>();
-        diamondsList = new ArrayList<>();
         this.score = 0;
         this.level = new Level(1, FilePath.LEVEL1);
         this.gameOver = false;
@@ -29,52 +25,57 @@ public class Game {
         this.redoBoard = new Stack<>();
         this.undoRockford = new Stack<>();
         this.redoRockford = new Stack<>();
+        this.numberOfDiamonds = 0;
     }
 
-    public void saveItems() {
-        Board currentBoard = new Board();
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 39; j++) {
-                Position tempPos = new Position(i, j);
-                if (this.board.isClay(tempPos)) currentBoard.setItem(new Clay(tempPos), tempPos);
-                if (this.board.isDiamond(tempPos)) currentBoard.setItem(new Diamonds(tempPos), tempPos);
-                if (this.board.isEmpty(tempPos)) currentBoard.setItem(new Empty(tempPos), tempPos);
-                if (this.board.isExitdoor(tempPos)) currentBoard.setItem(new ExitDoor(tempPos), tempPos);
-                if (this.board.isRock(tempPos)) currentBoard.setItem(new Rock(tempPos), tempPos);
-                if (this.board.isRockford(tempPos)) currentBoard.setItem(new Rockford(tempPos), tempPos);
-                if (this.board.isWall(tempPos)) currentBoard.setItem(new Wall(tempPos), tempPos);
-            }
-        }
-        this.undoBoard.push(currentBoard);
-        this.undoRockford.push(new Position(this.rockford.getPosition().getX(), this.rockford.getPosition().getY()));
+    public Board getBoard() {
+        return this.board;
     }
 
-    public boolean isUndoStackEmpty() {
-        return this.undoBoard.isEmpty();
+    public int getScore() {
+        return score;
     }
 
-    public boolean isRedoStackEmpty() {
-        return this.redoBoard.isEmpty();
+    public void setScore(int score) {
+        this.score = score;
     }
 
-    public void undoCmd() {
-        if (!undoRockford.isEmpty() && !undoBoard.isEmpty()) {
-            redoBoard.push(getBoard());
-            redoRockford.push(getRockford().getPosition());
-            this.board = this.undoBoard.pop();
-            this.rockford.setPosition(undoRockford.pop());
-        }
+    public boolean isGameOver() {
+        return gameOver;
     }
 
-    public void redoCmd() {
-        if (!redoRockford.isEmpty() && !redoBoard.isEmpty()){
-            undoBoard.push(getBoard());
-            undoRockford.push(getRockford().getPosition());
-            this.board = this.redoBoard.pop();
-            this.rockford.setPosition(redoRockford.pop());
-        }
+    public Level getLevel() {
+        return level;
     }
 
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    public Rockford getRockford() {
+        return this.rockford;
+    }
+
+    public void setRockford(Rockford rockford) {
+        this.rockford = rockford;
+    }
+
+    public int getNumberOfDiamonds() {
+        return numberOfDiamonds;
+    }
+
+    public void setNumberOfDiamonds(int numberOfDiamonds) {
+        this.numberOfDiamonds = numberOfDiamonds + 1;
+    }
+
+    public void nextLevel() {
+        Level level = new Level(2, FilePath.LEVEL2);
+        setLevel(level);
+    }
+
+    public void addExit(){
+
+    }
 
     public void start() {
         int fileData;
@@ -98,14 +99,13 @@ public class Game {
                             break;
                         case 100:
                             board.setItem(new Diamonds(pos), pos);
-                            diamondsList.add((Diamonds) board.getItem(pos));
+                            setNumberOfDiamonds(getNumberOfDiamonds());
                             break;
                         case 101:
                             board.setItem(new Empty(pos), pos);
                             break;
                         case 114:
                             board.setItem(new Rock(pos), pos);
-                            rockList.add((Rock) board.getItem(pos));
                             break;
                         case 119:
                             board.setItem(new Wall(pos), pos);
@@ -123,6 +123,7 @@ public class Game {
     }
 
     public void moveRockford(String direction) {
+        redoRockford.clear();
         saveItems();
         Position currentPos = rockford.getPosition();
         Position nextPos;
@@ -144,11 +145,6 @@ public class Game {
                 throw new IllegalStateException("Unexpected value: " + direction);
         }
         if (!board.isRock(nextPos) && !board.isWall(nextPos)) {
-            if (board.isDiamond(nextPos)) {
-                this.score++;
-                Diamonds d = (Diamonds) board.getItem(nextPos);
-                d.setClaimed();
-            }
             board.setItem(new Empty(currentPos), currentPos);
             rockford.setPosition(nextPos);
             board.setItem(rockford, nextPos);
@@ -157,15 +153,20 @@ public class Game {
         moveItemsDiagonal();
         moveItemsVertical();
         moveItemsDiagonal();
+        setScore(calculScore());
     }
 
     public void moveItemsVertical() {
-        for (int i = 0; i < rockList.size(); i++) {
-            verticalMovement(rockList.get(i));
-        }
-        for (int i = 0; i < diamondsList.size(); i++) {
-            if (!diamondsList.get(i).isClaimed())
-                verticalMovement(diamondsList.get(i));
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 39; j++) {
+                Position tempPosition = new Position(i, j);
+                if (board.getItem(tempPosition) instanceof Rock){
+                    verticalMovement(board.getItem(tempPosition));
+                }
+                if (board.getItem(tempPosition) instanceof Diamonds){
+                    verticalMovement(board.getItem(tempPosition));
+                }
+            }
         }
     }
 
@@ -192,19 +193,22 @@ public class Game {
     }
 
     public void moveItemsDiagonal() {
-        for (int i = 0; i < rockList.size(); i++) {
-            leftDiagonalMovement(rockList.get(i));
-            rightDiagonalMovement(rockList.get(i));
-        }
-        for (int i = 0; i < diamondsList.size(); i++) {
-            if (!diamondsList.get(i).isClaimed()) {
-                leftDiagonalMovement(diamondsList.get(i));
-                rightDiagonalMovement(diamondsList.get(i));
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 39; j++) {
+                Position tempPosition = new Position(i, j);
+                if (board.getItem(tempPosition) instanceof Rock){
+                    leftDiagonalMovement(board.getItem(tempPosition));
+                    rightDiagonalMovement(board.getItem(tempPosition));
+                }
+                if (board.getItem(tempPosition) instanceof Diamonds){
+                    leftDiagonalMovement(board.getItem(tempPosition));
+                    rightDiagonalMovement(board.getItem(tempPosition));
+                }
             }
         }
     }
 
-    public void leftDiagonalMovement(Item item) {
+    private void leftDiagonalMovement(Item item) {
         Position currentPos = item.getPosition();
         Position nextPosWEST = new Position(currentPos.getX(), currentPos.getY() - 1);
         Position nextPosSUDWEST = new Position(currentPos.getX() + 1, currentPos.getY() - 1);
@@ -240,51 +244,61 @@ public class Game {
         }
     }
 
-//    private int calculDiamonds(){
-//        for (int i = 0; i < 20; i++) {
-//            for (int j = 0; j < 39; j++) {
-//                Diamonds d = (Diamonds) board.getItem(new Position(i,j));
-//                if (d.isClaimed()){
-//
-//                }
-//            }
-//        }
-//    }
-
-    public void nextLevel() {
-        Level level = new Level(2, FilePath.LEVEL2);
-        setLevel(level);
+    public void saveItems() {
+        Board currentBoard = new Board();
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 39; j++) {
+                Position tempPos = new Position(i, j);
+                if (this.board.isClay(tempPos)) currentBoard.setItem(new Clay(tempPos), tempPos);
+                if (this.board.isDiamond(tempPos)) currentBoard.setItem(new Diamonds(tempPos), tempPos);
+                if (this.board.isEmpty(tempPos)) currentBoard.setItem(new Empty(tempPos), tempPos);
+                if (this.board.isExitdoor(tempPos)) currentBoard.setItem(new ExitDoor(tempPos), tempPos);
+                if (this.board.isRock(tempPos)) currentBoard.setItem(new Rock(tempPos), tempPos);
+                if (this.board.isRockford(tempPos)) currentBoard.setItem(new Rockford(tempPos), tempPos);
+                if (this.board.isWall(tempPos)) currentBoard.setItem(new Wall(tempPos), tempPos);
+            }
+        }
+        this.undoBoard.push(currentBoard);
+        this.undoRockford.push(new Position(this.rockford.getPosition().getX(), this.rockford.getPosition().getY()));
     }
 
-    public Board getBoard() {
-        return this.board;
+    public void undoCmd() {
+        if (!undoRockford.isEmpty() && !undoBoard.isEmpty()) {
+            redoBoard.push(getBoard());
+            redoRockford.push(new Position(getRockford().getPosition().getX(), getRockford().getPosition().getY()));
+            this.board = this.undoBoard.pop();
+            this.rockford.setPosition(undoRockford.pop());
+        }
+        setScore(calculScore());
     }
 
-    public int getScore() {
-        return score;
+    public void redoCmd() {
+        if (!redoRockford.isEmpty() && !redoBoard.isEmpty()){
+            undoBoard.push(getBoard());
+            undoRockford.push(new Position(getRockford().getPosition().getX(), getRockford().getPosition().getY()));
+            this.board = this.redoBoard.pop();
+            this.rockford.setPosition(redoRockford.pop());
+        }
+        setScore(calculScore());
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public boolean isUndoStackEmpty() {
+        return this.undoBoard.isEmpty();
     }
 
-    public boolean isGameOver() {
-        return gameOver;
+    public boolean isRedoStackEmpty() {
+        return this.redoBoard.isEmpty();
     }
 
-    public Level getLevel() {
-        return level;
-    }
 
-    public void setLevel(Level level) {
-        this.level = level;
-    }
-
-    public Rockford getRockford() {
-        return this.rockford;
-    }
-
-    public void setRockford(Rockford rockford) {
-        this.rockford = rockford;
+    private int calculScore(){
+        int nbOnBoard = 0;
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 39; j++) {
+                Position tempPos = new Position(i, j);
+                if (board.getItem(tempPos) instanceof Diamonds) nbOnBoard++;
+            }
+        }
+        return getNumberOfDiamonds() - nbOnBoard;
     }
 }
