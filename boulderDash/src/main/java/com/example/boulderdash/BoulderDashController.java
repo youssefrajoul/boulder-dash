@@ -1,14 +1,17 @@
 package com.example.boulderdash;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import com.example.boulderdash.fxView.View;
+import model.Game;
 
 public class BoulderDashController {
-    @FXML
-    private Label welcomeText;
+    private View view;
+    private Game game;
 
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    public BoulderDashController(Game game, View view){
+        this.game = game;
+        this.view = view;
     }
+
+
+
 }

@@ -1,27 +1,47 @@
 package com.example.boulderdash;
 
+import com.example.boulderdash.fxView.View;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.Game;
 
 import java.io.IOException;
 
 public class BoulderDashApplication extends Application {
+
+    private Game game = new Game();
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(BoulderDashApplication.class.getResource("hello-view.fxml"));
-        Image diamond = new Image("Diamond.png");
-        ImageView iv = new ImageView(diamond);
-        GridPane grid = new GridPane();
-        grid.add(iv, 3 , 3);
-        Scene scene = new Scene(grid, 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) throws IOException {
+        game.start();
+        View view = new View(game);
+        Scene scene = new Scene(view);
+        primaryStage.setTitle("Boulder-Dash");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        scene.setOnKeyPressed(e -> {
+            System.out.println("test1");
+            switch (e.getCode()) {
+                case UP:
+                    game.moveRockford("w");
+                    view.refreshScene();
+                    break;
+                case DOWN:
+                    game.moveRockford("s");
+                    view.refreshScene();
+                    break;
+                case LEFT:
+                    game.moveRockford("a");
+                    view.refreshScene();
+                    break;
+                case RIGHT:
+                    game.moveRockford("d");
+                    view.refreshScene();
+                    break;
+            }
+            System.out.println("test2");
+        });
     }
 
     public static void main(String[] args) {

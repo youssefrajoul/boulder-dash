@@ -2,11 +2,11 @@ package model.items;
 
 import model.Position;
 
-public class Diamonds extends Item {
+public class Diamond extends Item {
     private Shape shape;
     private boolean claimed;
 
-    public Diamonds(Position position) {
+    public Diamond(Position position) {
         super(position);
         this.shape = Shape.d;
         this.claimed = false;

@@ -98,7 +98,7 @@ public class Game extends Subject {
                             board.setItem(new Clay(pos), pos);
                             break;
                         case 100:
-                            board.setItem(new Diamonds(pos), pos);
+                            board.setItem(new Diamond(pos), pos);
                             setNumberOfDiamonds(getNumberOfDiamonds());
                             break;
                         case 101:
@@ -163,7 +163,7 @@ public class Game extends Subject {
                 if (board.getItem(tempPosition) instanceof Rock){
                     verticalMovement(board.getItem(tempPosition));
                 }
-                if (board.getItem(tempPosition) instanceof Diamonds){
+                if (board.getItem(tempPosition) instanceof Diamond){
                     verticalMovement(board.getItem(tempPosition));
                 }
             }
@@ -200,7 +200,7 @@ public class Game extends Subject {
                     leftDiagonalMovement(board.getItem(tempPosition));
                     rightDiagonalMovement(board.getItem(tempPosition));
                 }
-                if (board.getItem(tempPosition) instanceof Diamonds){
+                if (board.getItem(tempPosition) instanceof Diamond){
                     leftDiagonalMovement(board.getItem(tempPosition));
                     rightDiagonalMovement(board.getItem(tempPosition));
                 }
@@ -250,7 +250,7 @@ public class Game extends Subject {
             for (int j = 0; j < 39; j++) {
                 Position tempPos = new Position(i, j);
                 if (this.board.isClay(tempPos)) currentBoard.setItem(new Clay(tempPos), tempPos);
-                if (this.board.isDiamond(tempPos)) currentBoard.setItem(new Diamonds(tempPos), tempPos);
+                if (this.board.isDiamond(tempPos)) currentBoard.setItem(new Diamond(tempPos), tempPos);
                 if (this.board.isEmpty(tempPos)) currentBoard.setItem(new Empty(tempPos), tempPos);
                 if (this.board.isExitdoor(tempPos)) currentBoard.setItem(new ExitDoor(tempPos), tempPos);
                 if (this.board.isRock(tempPos)) currentBoard.setItem(new Rock(tempPos), tempPos);
@@ -296,7 +296,7 @@ public class Game extends Subject {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 39; j++) {
                 Position tempPos = new Position(i, j);
-                if (board.getItem(tempPos) instanceof Diamonds) nbOnBoard++;
+                if (board.getItem(tempPos) instanceof Diamond) nbOnBoard++;
             }
         }
         return getNumberOfDiamonds() - nbOnBoard;
