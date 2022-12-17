@@ -1,15 +1,15 @@
 package com.example.boulderdash;
 
-import com.example.boulderdash.fxView.View;
+import com.example.boulderdash.javaFxView.BoardView;
 import model.Game;
 
 public class BoulderDashController {
-    private View view;
+    private BoardView view;
     private Game game;
 
-    public BoulderDashController(Game game, View view){
+    public BoulderDashController(Game game, BoardView boardView){
         this.game = game;
-        this.view = view;
+        this.view = boardView;
     }
 
 

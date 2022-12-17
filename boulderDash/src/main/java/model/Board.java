@@ -5,9 +5,13 @@ import model.items.Shape;
 import model.items.Square;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 public class Board {
     private Square[][] squares;
+    private Stack<Item> movedItems;
+    private Stack<Item> undoFx;
+    private Stack<Item> redoFx;
 
     public Board() {
         this.squares = new Square[20][39];
@@ -16,10 +20,37 @@ public class Board {
                 squares[i][j] = new Square(null);
             }
         }
+        this.movedItems = new Stack<>();
+        this.undoFx = new Stack<>();
+        this.redoFx = new Stack<>();
+    }
+
+    public void createItem(Item item, Position position){
+        squares[position.getX()][position.getY()].setItem(item);
     }
 
     public void setItem(Item item, Position position){
         squares[position.getX()][position.getY()].setItem(item);
+        //item.setPosition(new Position(position.getX(), position.getY()));
+        saveMovedItems(item, position);
+    }
+
+    public void saveMovedItems(Item item, Position position){
+        item.setPosition(new Position(position.getX(), position.getY()));
+        movedItems.push(item);
+        undoFx.push(item);
+    }
+
+    public Stack<Item> getUndoFx() {
+        return undoFx;
+    }
+
+    public Stack<Item> getRedoFx() {
+        return redoFx;
+    }
+
+    public Stack<Item> getMovedItems() {
+        return movedItems;
     }
 
     public Shape getShape(Position position) {

@@ -2,6 +2,8 @@ package model;
 
 import Observer.Subject;
 import model.items.*;
+
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Game extends Subject {
@@ -73,7 +75,7 @@ public class Game extends Subject {
         setLevel(level);
     }
 
-    public void addExit(){
+    public void addExit() {
 
     }
 
@@ -92,26 +94,26 @@ public class Game extends Subject {
                     switch (fileData) {
                         case 102:
                             this.rockford = new Rockford(pos);
-                            board.setItem(rockford, pos);
+                            board.createItem(rockford, pos);
                             break;
                         case 99:
-                            board.setItem(new Clay(pos), pos);
+                            board.createItem(new Clay(pos), pos);
                             break;
                         case 100:
-                            board.setItem(new Diamond(pos), pos);
+                            board.createItem(new Diamond(pos), pos);
                             setNumberOfDiamonds(getNumberOfDiamonds());
                             break;
                         case 101:
-                            board.setItem(new Empty(pos), pos);
+                            board.createItem(new Empty(pos), pos);
                             break;
                         case 114:
-                            board.setItem(new Rock(pos), pos);
+                            board.createItem(new Rock(pos), pos);
                             break;
                         case 119:
-                            board.setItem(new Wall(pos), pos);
+                            board.createItem(new Wall(pos), pos);
                             break;
                         case 120:
-                            board.setItem(new ExitDoor(pos), pos);
+                            board.createItem(new ExitDoor(pos), pos);
                             break;
                     }
                     j++;
@@ -125,7 +127,7 @@ public class Game extends Subject {
     public void moveRockford(String direction) {
         redoRockford.clear();
         saveItems();
-        Position currentPos = rockford.getPosition();
+        Position currentPos = new Position(rockford.getPosition().getX(), rockford.getPosition().getY());
         Position nextPos;
         switch (direction) {
             // Warnings!!! QWERTY US Keyboard
@@ -145,14 +147,11 @@ public class Game extends Subject {
                 throw new IllegalStateException("Unexpected value: " + direction);
         }
         if (!board.isRock(nextPos) && !board.isWall(nextPos)) {
-            board.setItem(new Empty(currentPos), currentPos);
+            Empty empty = new Empty(currentPos);
+            board.setItem(empty, currentPos);
             rockford.setPosition(nextPos);
             board.setItem(rockford, nextPos);
         }
-        moveItemsVertical();
-        moveItemsDiagonal();
-        moveItemsVertical();
-        moveItemsDiagonal();
         setScore(calculScore());
     }
 
@@ -160,10 +159,10 @@ public class Game extends Subject {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 39; j++) {
                 Position tempPosition = new Position(i, j);
-                if (board.getItem(tempPosition) instanceof Rock){
+                if (board.getItem(tempPosition) instanceof Rock) {
                     verticalMovement(board.getItem(tempPosition));
                 }
-                if (board.getItem(tempPosition) instanceof Diamond){
+                if (board.getItem(tempPosition) instanceof Diamond) {
                     verticalMovement(board.getItem(tempPosition));
                 }
             }
@@ -171,7 +170,7 @@ public class Game extends Subject {
     }
 
     private void verticalMovement(Item item) {
-        Position currentPos = item.getPosition();
+        Position currentPos = new Position(item.getPosition().getX(), item.getPosition().getY());
         Position nextPosSUD = new Position(currentPos.getX() + 1, currentPos.getY());
         Position nextPosSUDSUD = new Position(currentPos.getX() + 2, currentPos.getY());
         while (board.isEmpty(nextPosSUD)) {
@@ -186,8 +185,9 @@ public class Game extends Subject {
             board.setItem(empty, currentPos);
             item.setPosition(nextPosSUD);
             board.setItem(item, nextPosSUD);
+            moveItemsVertical();// Recursive method to let all rocks fall until there is no rock that has to fall
             // Reassign current & next positions
-            currentPos = item.getPosition();
+            currentPos = new Position(item.getPosition().getX(), item.getPosition().getY());
             nextPosSUD = new Position(currentPos.getX() + 1, currentPos.getY());
         }
     }
@@ -196,11 +196,11 @@ public class Game extends Subject {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 39; j++) {
                 Position tempPosition = new Position(i, j);
-                if (board.getItem(tempPosition) instanceof Rock){
+                if (board.getItem(tempPosition) instanceof Rock) {
                     leftDiagonalMovement(board.getItem(tempPosition));
                     rightDiagonalMovement(board.getItem(tempPosition));
                 }
-                if (board.getItem(tempPosition) instanceof Diamond){
+                if (board.getItem(tempPosition) instanceof Diamond) {
                     leftDiagonalMovement(board.getItem(tempPosition));
                     rightDiagonalMovement(board.getItem(tempPosition));
                 }
@@ -209,7 +209,7 @@ public class Game extends Subject {
     }
 
     private void leftDiagonalMovement(Item item) {
-        Position currentPos = item.getPosition();
+        Position currentPos = new Position(item.getPosition().getX(), item.getPosition().getY());
         Position nextPosWEST = new Position(currentPos.getX(), currentPos.getY() - 1);
         Position nextPosSUDWEST = new Position(currentPos.getX() + 1, currentPos.getY() - 1);
         Position nextPosSUD = new Position(currentPos.getX() + 1, currentPos.getY());
@@ -221,13 +221,13 @@ public class Game extends Subject {
             item.setPosition(nextPosSUDWEST);
             board.setItem(item, nextPosSUDWEST);
             // Reassign current & next positions
-            currentPos = item.getPosition();
+            currentPos = new Position(item.getPosition().getX(), item.getPosition().getY());
             nextPosSUDWEST = new Position(currentPos.getX() + 1, currentPos.getY());
         }
     }
 
     private void rightDiagonalMovement(Item item) {
-        Position currentPos = item.getPosition();
+        Position currentPos = new Position(item.getPosition().getX(), item.getPosition().getY());
         Position nextPosEST = new Position(currentPos.getX(), currentPos.getY() + 1);
         Position nextPosSUDEST = new Position(currentPos.getX() + 1, currentPos.getY() + 1);
         Position nextPosSUD = new Position(currentPos.getX() + 1, currentPos.getY());
@@ -239,7 +239,7 @@ public class Game extends Subject {
             item.setPosition(nextPosSUDEST);
             board.setItem(item, nextPosSUDEST);
             // Reassign current & next positions
-            currentPos = item.getPosition();
+            currentPos = new Position(item.getPosition().getX(), item.getPosition().getY());
             nextPosSUDEST = new Position(currentPos.getX() + 1, currentPos.getY());
         }
     }
@@ -249,13 +249,13 @@ public class Game extends Subject {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 39; j++) {
                 Position tempPos = new Position(i, j);
-                if (this.board.isClay(tempPos)) currentBoard.setItem(new Clay(tempPos), tempPos);
-                if (this.board.isDiamond(tempPos)) currentBoard.setItem(new Diamond(tempPos), tempPos);
-                if (this.board.isEmpty(tempPos)) currentBoard.setItem(new Empty(tempPos), tempPos);
-                if (this.board.isExitdoor(tempPos)) currentBoard.setItem(new ExitDoor(tempPos), tempPos);
-                if (this.board.isRock(tempPos)) currentBoard.setItem(new Rock(tempPos), tempPos);
-                if (this.board.isRockford(tempPos)) currentBoard.setItem(new Rockford(tempPos), tempPos);
-                if (this.board.isWall(tempPos)) currentBoard.setItem(new Wall(tempPos), tempPos);
+                if (this.board.isClay(tempPos)) currentBoard.createItem(new Clay(tempPos), tempPos);
+                if (this.board.isDiamond(tempPos)) currentBoard.createItem(new Diamond(tempPos), tempPos);
+                if (this.board.isEmpty(tempPos)) currentBoard.createItem(new Empty(tempPos), tempPos);
+                if (this.board.isExitdoor(tempPos)) currentBoard.createItem(new ExitDoor(tempPos), tempPos);
+                if (this.board.isRock(tempPos)) currentBoard.createItem(new Rock(tempPos), tempPos);
+                if (this.board.isRockford(tempPos)) currentBoard.createItem(new Rockford(tempPos), tempPos);
+                if (this.board.isWall(tempPos)) currentBoard.createItem(new Wall(tempPos), tempPos);
             }
         }
         this.undoBoard.push(currentBoard);
@@ -267,17 +267,41 @@ public class Game extends Subject {
             redoBoard.push(getBoard());
             redoRockford.push(new Position(getRockford().getPosition().getX(), getRockford().getPosition().getY()));
             this.board = this.undoBoard.pop();
-            this.rockford.setPosition(undoRockford.pop());
+            this.rockford.setPosition(new Position(undoRockford.peek().getX(), undoRockford.pop().getY()));
         }
         setScore(calculScore());
     }
 
+    public void undoCmdFx() {
+        if (!undoRockford.isEmpty() && !undoBoard.isEmpty()) {
+            redoBoard.push(getBoard());
+            redoRockford.push(new Position(getRockford().getPosition().getX(), getRockford().getPosition().getY()));
+            this.board = this.undoBoard.pop();
+            this.rockford.setPosition(new Position(undoRockford.peek().getX(), undoRockford.pop().getY()));
+        }
+
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 39; j++) {
+                Position tempPosition = new Position(i, j);
+                    board.setItem(board.getItem(tempPosition), tempPosition);
+            }
+        }
+
+        setScore(calculScore());
+    }
+
     public void redoCmd() {
-        if (!redoRockford.isEmpty() && !redoBoard.isEmpty()){
+        if (!redoRockford.isEmpty() && !redoBoard.isEmpty()) {
             undoBoard.push(getBoard());
             undoRockford.push(new Position(getRockford().getPosition().getX(), getRockford().getPosition().getY()));
             this.board = this.redoBoard.pop();
-            this.rockford.setPosition(redoRockford.pop());
+            this.rockford.setPosition(new Position(redoRockford.peek().getX(), redoRockford.pop().getY()));
+        }
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 39; j++) {
+                Position tempPosition = new Position(i, j);
+                board.setItem(board.getItem(tempPosition), tempPosition);
+            }
         }
         setScore(calculScore());
     }
@@ -291,7 +315,7 @@ public class Game extends Subject {
     }
 
 
-    private int calculScore(){
+    private int calculScore() {
         int nbOnBoard = 0;
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 39; j++) {
