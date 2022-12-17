@@ -2,6 +2,9 @@ package model.items;
 
 import model.Position;
 
+/**
+ * Represents Rocks in the game
+ */
 public class Rock extends Item {
     private Shape shape;
 

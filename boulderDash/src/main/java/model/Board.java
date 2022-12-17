@@ -7,6 +7,9 @@ import model.items.Square;
 import java.util.Arrays;
 import java.util.Stack;
 
+/**
+ * Represents the board of the game with squares and items inside
+ */
 public class Board {
     private Square[][] squares;
     private Stack<Item> movedItems;
@@ -25,67 +28,61 @@ public class Board {
         this.redoFx = new Stack<>();
     }
 
+    /**
+     * Puts Items on the board at the beginning of the game
+     * @param item
+     * @param position
+     */
     public void createItem(Item item, Position position){
         squares[position.getX()][position.getY()].setItem(item);
     }
 
+    /**
+     * Puts Items on the board during the game
+     * @param item
+     * @param position
+     */
     public void setItem(Item item, Position position){
         squares[position.getX()][position.getY()].setItem(item);
         //item.setPosition(new Position(position.getX(), position.getY()));
         saveMovedItems(item, position);
     }
 
+    /**
+     * Saves the item that changed position in a stack data structure
+     * @param item
+     * @param position
+     */
     public void saveMovedItems(Item item, Position position){
         item.setPosition(new Position(position.getX(), position.getY()));
         movedItems.push(item);
         undoFx.push(item);
     }
 
-    public Stack<Item> getUndoFx() {
-        return undoFx;
-    }
-
-    public Stack<Item> getRedoFx() {
-        return redoFx;
-    }
-
+    /**
+     * Gets the stack movedItems that saves last moved items
+     * @return
+     */
     public Stack<Item> getMovedItems() {
         return movedItems;
     }
 
+    /**
+     * Gets the shape of an item in a specific position received as parameter on board
+     * @param position
+     * @return
+     */
     public Shape getShape(Position position) {
         return squares[position.getX()][position.getY()].getItem().getShape();
     }
 
+    /**
+     * Gets the item that exits in specific position
+     * @param position
+     * @return
+     */
     public Item getItem(Position position) {
         return squares[position.getX()][position.getY()].getItem();
-    }
-    public boolean isEmpty(Position position){
-        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.e;
-    }
-
-    public boolean isExitdoor(Position position){
-        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.x;
-    }
-
-    public boolean isRock(Position position){
-        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.r;
-    }
-
-    public boolean isDiamond(Position position){
-        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.d;
-    }
-
-    public boolean isRockford(Position position){
-        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.f;
-    }
-
-    public boolean isWall(Position position){
-        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.w;
-    }
-
-    public boolean isClay(Position position){
-        return squares[position.getX()][position.getY()].getItem().getShape() == Shape.c;
     }
 
     @Override

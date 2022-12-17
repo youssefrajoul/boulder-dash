@@ -25,7 +25,7 @@ public class BoardView extends GridPane {
                     ImageView rockford = new ImageView(new Image("/Rockford.png"));
                     this.add(rockford, j, i);
                 } else if (game.getBoard().getItem(new Position(i, j)) instanceof ExitDoor) {
-                    ImageView exit = new ImageView(new Image("/Wall.png"));
+                    ImageView exit = new ImageView(new Image("/ExitDoor.png"));
                     this.add(exit, j, i);
                 } else if (game.getBoard().getItem(new Position(i, j)) instanceof Rock) {
                     ImageView rock = new ImageView(new Image("/Rock.png"));
@@ -56,7 +56,7 @@ public class BoardView extends GridPane {
                     System.out.println("wall");
                     this.add(wall, item.getPosition().getY(), item.getPosition().getX());
                 } else if (item instanceof ExitDoor) {
-                    ImageView exit = new ImageView(new Image("/Wall.png"));
+                    ImageView exit = new ImageView(new Image("/ExitDoor.png"));
                     System.out.println("exit door");
                     this.add(exit, item.getPosition().getY(), item.getPosition().getX());
                 } else if (item instanceof Rock) {

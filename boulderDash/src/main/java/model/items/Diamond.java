@@ -2,6 +2,9 @@ package model.items;
 
 import model.Position;
 
+/**
+ * Represents Diamond in the game
+ */
 public class Diamond extends Item {
     private Shape shape;
     private boolean claimed;
@@ -16,14 +19,5 @@ public class Diamond extends Item {
     public Shape getShape() {
         return shape;
     }
-
-    public boolean isClaimed() {
-        return claimed;
-    }
-
-    public void setClaimed() {
-        this.claimed = true;
-    }
-
 
 }

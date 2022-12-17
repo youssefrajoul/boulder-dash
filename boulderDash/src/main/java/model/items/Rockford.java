@@ -2,6 +2,9 @@ package model.items;
 
 import model.Position;
 
+/**
+ * Represents the Rockford, main character of the game
+ */
 public class Rockford extends Item {
 
     private Shape shape;

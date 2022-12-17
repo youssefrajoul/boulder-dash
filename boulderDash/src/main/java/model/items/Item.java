@@ -4,6 +4,9 @@ import model.Position;
 
 import java.util.Objects;
 
+/**
+ * Represents an item (rock, diamond, rockford ...), Class mother
+ */
 public class Item {
     private Position position;
     private Shape shape;

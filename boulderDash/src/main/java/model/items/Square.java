@@ -4,6 +4,10 @@ import model.items.Item;
 
 import java.util.Objects;
 
+/**
+ * Represents the squares inside the board (20 squares * 39 squares)
+ * & each square has an item inside
+ */
 public class Square {
     private Item item;
 
@@ -11,10 +15,18 @@ public class Square {
         this.item = item;
     }
 
+    /**
+     * Gets the item that exists inside this square
+     * @return
+     */
     public Item getItem() {
         return item;
     }
 
+    /**
+     * Sets an item inside this square
+     * @param item
+     */
     public void setItem(Item item) {
         this.item = item;
     }

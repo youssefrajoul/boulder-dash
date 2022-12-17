@@ -19,6 +19,9 @@ public class TextView implements Observer {
         }
     }
 
+    /**
+     * displays the board of the game
+     */
     public void display(){
         System.out.println("Score: "+game.getScore());
         for (int i = 0; i < 20; i++) {

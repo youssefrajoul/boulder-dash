@@ -1,9 +1,10 @@
 package model.items;
 
 import model.Position;
-import model.items.Item;
-import model.items.Shape;
 
+/**
+ * Represents the Walls(surroundings) of the game
+ */
 public class Wall extends Item {
 
     private Shape shape;

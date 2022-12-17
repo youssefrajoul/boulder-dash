@@ -2,10 +2,13 @@ package com.example.boulderdash;
 
 import com.example.boulderdash.javaFxView.GameView;
 import com.example.boulderdash.javaFxView.HomeView;
+import com.example.boulderdash.javaFxView.LoseView;
+import com.example.boulderdash.javaFxView.WinView;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import model.Game;
 
@@ -18,11 +21,17 @@ public class BoulderDashApplication extends Application {
         Game game = new Game();
         game.start();
         HomeView homeView = new HomeView();
-        //BoardView boardView = new BoardView(game);
-        //Scene gameScene = new Scene(boardView);
+        WinView winView = new WinView();
+        LoseView loseView = new LoseView();
         GameView gameView = new GameView(game);
         Scene gameScene = new Scene(gameView);
         Scene homeScene = new Scene(homeView);
+        Scene winScene = new Scene(winView);
+        Scene loseScene = new Scene(loseView);
+        ScrollPane sp = new ScrollPane();
+        sp.setContent(loseView);
+
+        Scene scene = new Scene(sp, 300, 50);
 
         primaryStage.setTitle("Boulder-Dash");
         primaryStage.setScene(homeScene);
@@ -49,20 +58,20 @@ public class BoulderDashApplication extends Application {
                     game.moveRockford("d");
                     break;
                 case U:
-                    game.undoCmdFx();
+                    game.undoCmd();
                     break;
                 case R:
                     game.redoCmd();
                     break;
             }
             gameView.getBoardView().refreshBoard();
-//            boardView.refreshBoard();
             game.moveItemsVertical();
             game.moveItemsDiagonal();
             gameView.getBoardView().refreshBoard();
-//            boardView.refreshBoard();
             System.out.println("test2");
-            
+            if (game.isGameOver()) {
+                primaryStage.setScene(loseScene);
+            }
         });
     }
 

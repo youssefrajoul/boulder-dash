@@ -12,6 +12,4 @@ public class BoulderDashController {
         this.view = boardView;
     }
 
-
-
 }
